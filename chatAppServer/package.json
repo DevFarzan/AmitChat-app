@@ -1,0 +1,16 @@
+{
+  "name": "chatapp",
+  "version": "0.0.1",
+  "main": "Server.js",
+  "author": "farzan",
+  "dependencies": {
+    "body-parser": "~1.5.2",
+    "express": "~4.7.2",
+    "method-override": "~2.1.2",
+    "mongodb": "*",
+    "mongoose": "4.1.9",
+    "morgan": "~1.2.2",
+    "nodemailer": "0.3.37",
+    "twilio": "^2.2.1"
+  }
+}
