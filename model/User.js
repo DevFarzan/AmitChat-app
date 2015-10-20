@@ -12,6 +12,7 @@ var usersSchema = mongoose.Schema({
     insertedBy:String,
     InsertedDate:Array,
     randomForPassword:String,
+    sessionCode:String,
     ProfilePicture: [{'src':String,'current':Boolean}]
 
 });

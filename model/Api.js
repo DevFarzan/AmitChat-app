@@ -24,12 +24,20 @@ module.exports.signUp = function(req,res) {
 
 
     var randomeNumber = '';
+    var SessionCode = '';
     var possible = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
 
     for(var i=0; i< 12; i++)
     {
         randomeNumber += possible.charAt(Math.floor(Math.random() * possible.length));
     }
+    var number = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+
+    for(var j=0; j<8; j++)
+    {
+        SessionCode += number.charAt(Math.floor(Math.random() * number.length));
+    }
+
 
 
 
@@ -42,6 +50,7 @@ module.exports.signUp = function(req,res) {
         verifyCode:randomeNumber,
         insertedBy:req.body.signUpData.userName,
         userGender:req.body.signUpData.gender,
+        sessionCode:SessionCode,
         InsertedDate:new Date()
     });
 
@@ -122,7 +131,7 @@ module.exports.recoverPassword = function(req,res){
     var randomeNumber = '';
     var possible = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
 
-    for(var i=0; i< 5; i++)
+    for(var i=0; i<9; i++)
     {
         randomeNumber += possible.charAt(Math.floor(Math.random() * possible.length));
     }
@@ -135,7 +144,7 @@ module.exports.recoverPassword = function(req,res){
         {$set:{
             randomForPassword:randomeNumber
         }},function(err,data){
-            var smtpTransport = nodemailer.createTransport("SMTP",{
+            var smtpTransport = nodemailer.createTransport({
                 service: "Yahoo",
                 auth: {
                     user: "Chat_Company@yahoo.com",
@@ -150,8 +159,8 @@ module.exports.recoverPassword = function(req,res){
                 to:  userEmail, // list of receivers
                 subject: "Verification Code", // Subject line
                 text: "Hello world", // plaintext body
-                html: '<h3>Please click the following link to '+ randomeNumber+' </h3>' +
-                '<br><br><a href="http://localhost:8100/#/newPassword/'+randomeNumber+'"/>'+randomeNumber+'</a>'
+                html: '<h3>this is the Verification code'+ randomeNumber+' </h3>'
+
             };
 
             // send mail with defined transport object
@@ -502,5 +511,24 @@ module.exports.updateUserProfile = function(req,res){
             data:data
         });
     });
+
+};
+
+module.exports.SessionStorageId = function(req,res){
+
+    var sessionCode = req.body.SessionCode;
+    var userName    = req.body.username;
+
+    User.find({
+        userName: userName,
+        sessionCode: sessionCode
+    }, function (err, data) {
+        if(err){
+            res.send(403);
+        }
+        else if(data != null){
+            res.send(200);
+        }
+    })
 
 };
