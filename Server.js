@@ -77,6 +77,7 @@ app.post('/friendInvite',Api.friendInvite);
 app.post('/UserProfile',Api.UserProfile);
 app.post('/updateUserProfile',Api.updateUserProfile);
 app.post('/SessionStorageId',Api.SessionStorageId);
+app.post('/socialLogin',Api.socialLogin);
 
 
 

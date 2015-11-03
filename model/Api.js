@@ -138,12 +138,12 @@ module.exports.recoverPassword = function(req,res){
 
     var userEmail = req.body.recoverEmail.email;
 
-
+console.log('farzan')
     User.update(
         {email:userEmail},
         {$set:{
             randomForPassword:randomeNumber
-        }},function(err,data){
+        }},function(err,data) {
             var smtpTransport = nodemailer.createTransport({
                 service: "Yahoo",
                 auth: {
@@ -151,42 +151,43 @@ module.exports.recoverPassword = function(req,res){
                     pass: "amit1234"
                 }
             });
-            var noreplyEmail= 'Chat_Company@yahoo.com';
+            var noreplyEmail = 'Chat_Company@yahoo.com';
             var userEmail = req.body.recoverEmail.email;
             // setup e-mail data with unicode symbols
             var mailOptions = {
                 from: noreplyEmail, // sender address
-                to:  userEmail, // list of receivers
+                to: userEmail, // list of receivers
                 subject: "Verification Code", // Subject line
                 text: "Hello world", // plaintext body
-                html: '<h3>this is the Verification code'+ randomeNumber+' </h3>'
+                html: '<h3>this is the Verification code ' + randomeNumber + ' </h3>'
 
             };
 
             // send mail with defined transport object
-            smtpTransport.sendMail(mailOptions, function(error, response){
-                if(error){
+            smtpTransport.sendMail(mailOptions, function (error, response) {
+                if (error) {
                     console.log(error);
-                }else{
-                    console.log("Message sent: " + response.message);
+                } else {
+                    console.log("Message sent: " + response);
                 }
 
                 // if you don't want to use this transport object anymore, uncomment following line
                 //smtpTransport.close(); // shut down the connection pool, no more messages
             });
-        },function(err,data){
+
             res.send({
-                err:err,
-                data:data
+                err: err,
+                data: data
             });
-        });
+        })
+
 };
 module.exports.newPassword = function(req,res) {
 
     var newUserPassword = req.body.changeUserPassword.newUserPassword;
     //var confirmPassword = req.body.changeUserPassword.confirmPassword
     //
-    var Token = req.body.randomeToken;
+    var Token = req.body.changeUserPassword.VerificationCode;
 
     User.update(
         {
@@ -531,4 +532,29 @@ module.exports.SessionStorageId = function(req,res){
         }
     })
 
+};
+
+module.exports.socialLogin = function(req,res){
+    var userName = req.body.userName;
+    var email   = req.body.email;
+    var userGender = req.body.gender;
+    var code_Verified = req.body.code_Verified;
+
+    var socialUser = new User({
+        userName: userName,
+        email:  email,
+        /*pass: req.body.signUpData.password,*/
+        /*userPhoneNumber:'not shown',*/
+        code_Verified:code_Verified,
+        insertedBy:userName,
+        userGender:userGender,
+        InsertedDate:new Date()
+    });
+
+    socialUser.save(function (err, data) {
+        res.send({
+            err: err,
+            data: data
+        })
+    })
 };
